@@ -7,7 +7,7 @@ public class No{
     private List<No> vizinhos;
     private No pai;
     private int dist;
-    public enum Cor{
+    public static enum Cor{
         BRANCO, CINZA, PRETO
     }
     Cor cor;
