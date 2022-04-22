@@ -5,7 +5,7 @@ import interfaces.IGrafo;
 import java.util.List;
 import java.util.ArrayList;
 
-public Class GrafoLista implements IGrafo{
+public class GrafoLista implements IGrafo{
     // atributos
     private List<No> vertices;
     
