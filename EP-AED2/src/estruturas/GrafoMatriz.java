@@ -1,19 +1,18 @@
 package estruturas;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Stream;
 
 import interfaces.IGrafo;
 
-public class GrafoMatriz {
+public class GrafoMatriz implements IGrafo, Cloneable {
     private String[] valores;
     private boolean[][] arestas;
     private int[] pais;
     private final int qtdVertices;
 
+    // === CONSTRUTORES === //
     public GrafoMatriz(List<String> vertices) {
         this.qtdVertices = vertices.size();
         this.valores = new String[qtdVertices];
@@ -40,6 +39,38 @@ public class GrafoMatriz {
             for(String vizinho : todosVizinhos[verticeId])
                 this.arestas[verticeId][conversorDeValor.get(vizinho.trim())] = true;
         }
+    }
+
+    private GrafoMatriz(String[] vertices) {
+        this.qtdVertices = vertices.length;
+        this.arestas = new boolean[qtdVertices][qtdVertices];
+        this.pais = new int[qtdVertices];
+        this.valores = new String[qtdVertices];
+
+        for(int i = 0; i < qtdVertices; i++) {
+            this.valores[i] = vertices[i];
+            this.pais[i] = -1;
+        }
+    }
+
+    // === KOSARAJU === //
+    public IGrafo kosaraju() {
+        return null;
+    }
+
+    public IGrafo getArestasTranspostas() {
+        GrafoMatriz transposta = new GrafoMatriz(this.valores);
+
+        for(int i = 0; i < qtdVertices; i++)
+            for(int j = 0; j < qtdVertices; j++)
+                transposta.arestas[i][j] = !this.arestas[i][j];
+
+        return transposta;
+    }
+
+    // === OUTROS METODOS === //
+    public int getQtdVertices() {
+        return this.qtdVertices;
     }
 
     public void imprimeGrafo() {
@@ -71,6 +102,21 @@ public class GrafoMatriz {
             }
 
             System.out.println(linha);
+        }
+    }
+
+    @Override
+    public Object clone() {
+        try {
+            GrafoMatriz clone = (GrafoMatriz) super.clone();
+            clone.arestas = this.arestas.clone();
+            clone.pais = this.pais.clone();
+            clone.valores = this.valores.clone();
+
+            return clone;
+        } catch(Exception e) {
+            System.out.println("Falha ao clonar");
+            return this;
         }
     }
 }
