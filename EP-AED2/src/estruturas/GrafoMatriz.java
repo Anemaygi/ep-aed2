@@ -1,9 +1,14 @@
 package estruturas;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
+import estruturas.No.Cor;
 import interfaces.IGrafo;
 
 public class GrafoMatriz implements IGrafo, Cloneable {
@@ -27,17 +32,25 @@ public class GrafoMatriz implements IGrafo, Cloneable {
         for(int verticeId = 0; verticeId < qtdVertices; verticeId++) {
             String vertice = vertices.get(verticeId);
             String[] entradaQuebrada = vertice.split(": ");
-            this.valores[verticeId] = entradaQuebrada[0];
-            todosVizinhos[verticeId] = entradaQuebrada[1].split(";");
+
+            if(entradaQuebrada.length > 1) {
+                this.valores[verticeId] = entradaQuebrada[0];
+                todosVizinhos[verticeId] = entradaQuebrada[1].split(";");
+            } else {
+                this.valores[verticeId] = vertice.substring(0, vertice.length() - 1);
+                todosVizinhos[verticeId] = new String[0];
+            }
             this.pais[verticeId] = -1;
 
-            conversorDeValor.put(entradaQuebrada[0], verticeId);
+            conversorDeValor.put(this.valores[verticeId], verticeId);
         }
 
         //Adicionando os vizinhos
         for(int verticeId = 0; verticeId < qtdVertices; verticeId++) {
-            for(String vizinho : todosVizinhos[verticeId])
+            for(String vizinho : todosVizinhos[verticeId]) {
+
                 this.arestas[verticeId][conversorDeValor.get(vizinho.trim())] = true;
+            }
         }
     }
 
@@ -55,7 +68,54 @@ public class GrafoMatriz implements IGrafo, Cloneable {
 
     // === KOSARAJU === //
     public IGrafo kosaraju() {
+        String print = "";
+
+        for(int i : buscaEmProfundidade())
+            print += this.valores[i] + " ";
+
+        System.out.println(print);
+
         return null;
+    }
+
+    private List<Integer> buscaEmProfundidade() {
+        //Usaremos a ordem comum dos vertices
+        return buscaEmProfundidade(IntStream.range(0, qtdVertices).boxed().collect(Collectors.toList()));
+    }
+
+    private List<Integer> buscaEmProfundidade(List<Integer> ordemASeguir) {
+        List<Integer> ordemTopo = new ArrayList<Integer>();
+
+        //Inicializando as cores
+        Cor[] cores = new Cor[qtdVertices];
+        for(int i = 0; i < qtdVertices; i++)
+            cores[i] = Cor.BRANCO;
+
+        //Loop principal
+        for(int atual : ordemASeguir) {
+            if(cores[atual] != Cor.BRANCO)
+                //Vertice ja explorado
+                continue;
+
+            buscaEmNo(atual, cores, ordemTopo);
+        }       
+
+        return ordemTopo;
+    }
+
+    private void buscaEmNo(int atual, Cor[] cores, List<Integer> ordemTopo) {
+        cores[atual] = Cor.CINZA;
+
+        for(int viz = 0; viz < qtdVertices; viz++) {
+            if(arestas[atual][viz] == false || //Nao eh um vizinho
+               cores[viz] != Cor.BRANCO)       //O vizinho ja foi explorado
+                continue;
+
+            buscaEmNo(viz, cores, ordemTopo);
+        }
+
+        cores[atual] = Cor.PRETO;
+        ordemTopo.add(0, atual);
     }
 
     public IGrafo getArestasTranspostas() {
