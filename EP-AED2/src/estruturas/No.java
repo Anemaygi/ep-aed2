@@ -3,7 +3,7 @@ package estruturas;
 import java.util.List;
 import java.util.ArrayList;
 
-public class No{
+public class No implements Cloneable{
     // Atributos
     private String valor;
     private List<No> vizinhos;
@@ -62,6 +62,17 @@ public class No{
     @Override
     public String toString(){
         return this.valor;
+    }
+
+    // cloneable
+
+    No getClone(){
+        try{
+            return (No) super.clone();
+        } catch (CloneNotSupportedException e){
+            System.out.println("Cloning not allowed. ");
+            return this;
+        }
     }
     
     /*
