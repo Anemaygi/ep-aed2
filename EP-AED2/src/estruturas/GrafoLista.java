@@ -81,8 +81,8 @@ h: h;
     // Métodos da interface
  */   
 
-    public List<No> DFS(){
-        List<No> ordem = new ArrayList<No>();
+    public ArrayList<No> DFS(){
+        ArrayList<No> ordem = new ArrayList<No>();
         for (No vert : this.vertices){
             if(vert.getCor() == No.Cor.BRANCO){
                 DFSVisit(vert, ordem);
