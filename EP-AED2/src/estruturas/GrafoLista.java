@@ -80,6 +80,29 @@ h: h;
     
     // Métodos da interface
  */   
+
+    public List<No> DFS(){
+        List<No> ordem = new ArrayList<No>();
+        for (No vert : this.vertices){
+            if(vert.getCor() == No.Cor.BRANCO){
+                DFSVisit(vert, ordem);
+            }
+        }
+        return ordem;
+    }
+
+    public void DFSVisit(No vert, List<No> ordem){
+        vert.setCor(No.Cor.CINZA);
+        for (No vizinho : vert.getVizinhos()){
+            if(vizinho.getCor() == No.Cor.BRANCO){
+                vizinho.setPai(vert);
+                DFSVisit(vizinho, ordem);
+            }
+        }
+        vert.setCor(No.Cor.PRETO);
+        ordem.add(0,vert);
+    }
+
     public IGrafo kosaraju(){
         return this;
 
@@ -95,9 +118,7 @@ uma componente fortemente conectada separada
     }
 
     public void imprimeGrafo(){
-        /* working */
-        
-        
+        /* working */        
         for (No item : vertices) {
             System.out.printf(item+": ");
             for(No vizinho : item.getVizinhos()){
@@ -160,6 +181,11 @@ uma componente fortemente conectada separada
         System.out.println("~~~~");
         //GrafoLista teste2 = new GrafoLista(teste.getArestasTranspostas()); 
         teste.imprimeGrafo();
+         System.out.println("~~~~");
+        List<No> ordem = teste.DFS();
+        for (No no : ordem){
+            System.out.printf(no.getValor()+" ");
+        }
     }
 
 }
