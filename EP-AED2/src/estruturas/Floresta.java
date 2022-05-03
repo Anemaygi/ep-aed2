@@ -15,17 +15,19 @@ public class Floresta {
         this.raizes = new ArrayList<>();
     }
 
-    public Floresta(int[] pais) {
+    public Floresta(String[] nomes, int[] pais) {
         this();
 
         for(int i = 0; i < pais.length; i++) {
             if(pais[i] == -1) //Nao possui pai
-                raizes.add(i + "");
+                raizes.add(nomes[i] + "");
             else {
-                if(!filhos.containsKey(pais[i] + ""))
-                    filhos.put(pais[i] + "", new ArrayList<>());
+                String pai = nomes[pais[i]];
 
-                filhos.get(pais[i] + "").add(i + "");
+                if(!filhos.containsKey(pai + ""))
+                    filhos.put(pai + "", new ArrayList<>());
+
+                filhos.get(pai + "").add(nomes[i] + "");
             }
         }
     }

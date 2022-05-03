@@ -1,7 +1,6 @@
 package estruturas;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,7 +10,7 @@ import java.util.stream.IntStream;
 import estruturas.No.Cor;
 import interfaces.IGrafo;
 
-public class GrafoMatriz implements IGrafo, Cloneable {
+public class GrafoMatriz implements IGrafo {
     private String[] valores;
     private boolean[][] arestas;
     private int[] pais;
@@ -68,10 +67,22 @@ public class GrafoMatriz implements IGrafo, Cloneable {
 
     // === KOSARAJU === //
     public IGrafo kosaraju() {
-        String print = "";
+        GrafoMatriz transposto = (GrafoMatriz) this.getArestasTranspostas();
+        List<Integer> ordemTopo = buscaEmProfundidade();
+        transposto.buscaEmProfundidade(ordemTopo);
 
-        for(int i : buscaEmProfundidade())
-            print += this.valores[i] + " ";
+        System.out.println(ordemTopo);
+        Floresta floresta = new Floresta(transposto.valores, transposto.pais);
+
+        for(int i = 0; i < qtdVertices; i++) {
+            String pai = transposto.pais[i] == -1 ? "-" : transposto.valores[transposto.pais[i]];
+
+            System.out.println(transposto.valores[i] + ": " + pai);
+        }
+
+        String print = "";
+        for(Componente c : floresta.geraComponentes())
+            print += c.getVertices() + "; ";
 
         System.out.println(print);
 
@@ -92,15 +103,21 @@ public class GrafoMatriz implements IGrafo, Cloneable {
             cores[i] = Cor.BRANCO;
 
         //Loop principal
-        for(int atual : ordemASeguir) {
-            if(cores[atual] != Cor.BRANCO)
-                //Vertice ja explorado
-                continue;
-
+        int atual = ordemASeguir.get(0);
+        while(atual != -1) {
             buscaEmNo(atual, cores, ordemTopo);
+            atual = pegarProximoVerDisponivel(ordemASeguir, cores);
         }       
 
         return ordemTopo;
+    }
+
+    private int pegarProximoVerDisponivel(List<Integer> ordemASeguir, Cor[] cores) {
+        for(int i : ordemASeguir)
+            if(cores[i] == Cor.BRANCO)
+                return i;
+
+        return -1;
     }
 
     private void buscaEmNo(int atual, Cor[] cores, List<Integer> ordemTopo) {
@@ -112,6 +129,7 @@ public class GrafoMatriz implements IGrafo, Cloneable {
                 continue;
 
             buscaEmNo(viz, cores, ordemTopo);
+            pais[viz] = atual;
         }
 
         cores[atual] = Cor.PRETO;
@@ -122,8 +140,12 @@ public class GrafoMatriz implements IGrafo, Cloneable {
         GrafoMatriz transposta = new GrafoMatriz(this.valores);
 
         for(int i = 0; i < qtdVertices; i++)
-            for(int j = 0; j < qtdVertices; j++)
-                transposta.arestas[i][j] = !this.arestas[i][j];
+            for(int j = 0; j < qtdVertices; j++) {
+                if(this.arestas[i][j] == !this.arestas[j][i])
+                    transposta.arestas[i][j] = !this.arestas[i][j];
+                else if (this.arestas[i][j] && this.arestas[j][i])
+                    transposta.arestas[i][j] = true;
+            }
 
         return transposta;
     }
@@ -162,21 +184,6 @@ public class GrafoMatriz implements IGrafo, Cloneable {
             }
 
             System.out.println(linha);
-        }
-    }
-
-    @Override
-    public Object clone() {
-        try {
-            GrafoMatriz clone = (GrafoMatriz) super.clone();
-            clone.arestas = this.arestas.clone();
-            clone.pais = this.pais.clone();
-            clone.valores = this.valores.clone();
-
-            return clone;
-        } catch(Exception e) {
-            System.out.println("Falha ao clonar");
-            return this;
         }
     }
 }
