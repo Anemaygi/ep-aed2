@@ -26,4 +26,8 @@ public class Componente {
     public List<Componente> getLigacoes() {
         return this.ligacoes;
     }
+
+    public List<String> getVertices() {
+        return vertices;
+    }
 }
