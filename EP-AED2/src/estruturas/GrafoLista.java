@@ -142,17 +142,17 @@ h: h;
 
     public IGrafo kosaraju(){
         System.out.println("Aqui");
+        
+        // Cria o grafo transposto - OK
+        GrafoLista transposto =(GrafoLista) this.getArestasTranspostas();
+        transposto.imprimeGrafo();
+                
         List<No> ordem = this.DFS(this.vertices);
 
         for (No lista : ordem){
             System.out.print(lista+" ");
         }
-
-        GrafoLista transposto =(GrafoLista) this.getArestasTranspostas();
-        
-        System.out.print("\n");
-        transposto.imprimeGrafo();
-        
+      
         
         List<No> ordemtransposto = transposto.DFS(ordem);
         System.out.println("transposto");
@@ -160,6 +160,7 @@ h: h;
             System.out.print(algo+" ");
         }
         System.out.println(ordemtransposto.size());
+        
         System.out.println("transposto");
         
         //Floresta floresta = new Floresta(ordem);
