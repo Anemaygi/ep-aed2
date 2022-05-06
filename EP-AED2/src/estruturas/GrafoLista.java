@@ -12,7 +12,7 @@ public class GrafoLista implements IGrafo{
     // Métodos construtores   
     public GrafoLista(/*String entrada*/){
         // TESTE SEM ENTRADA
-        No na = new No("a");
+        /*No na = new No("a");
         No nb = new No("b");
         No nc = new No("c");
         No nd = new No("d");
@@ -46,12 +46,49 @@ public class GrafoLista implements IGrafo{
         vertices.add(ng);
         vertices.add(nh);
         this.vertices = vertices;
+        */
+
+        No n2 = new No("2");
+        No n3 = new No("3");
+        No n5 = new No("5");
+        No n7 = new No("7");
+        No n8 = new No("8");
+        No n9 = new No("9");
+        No n10 = new No("10");
+        No n11 = new No("11");
+
+        n7.addVizinho(n11);
+        n7.addVizinho(n8);
+        n5.addVizinho(n11);
+        n3.addVizinho(n8);
+        n3.addVizinho(n10);
+        n11.addVizinho(n2);
+        n11.addVizinho(n9);
+        n11.addVizinho(n10);
+        n8.addVizinho(n9);
+
+        ArrayList<No> vertices = new ArrayList<No>();
+        vertices.add(n2);
+        vertices.add(n3);
+        vertices.add(n5);
+        vertices.add(n7);
+        vertices.add(n8);
+        vertices.add(n9);
+        vertices.add(n10);
+        vertices.add(n11);
+        this.vertices = vertices;
+
+
     }
 
     //teste
-
+    /*
     public GrafoLista(List<No> vertices){
         this.vertices = vertices;
+    }
+    */
+    private GrafoLista(List<No> componentes){
+        this.vertices = componentes;
     }
     /*
     
@@ -81,9 +118,9 @@ h: h;
     // Métodos da interface
  */   
 
-    public ArrayList<No> DFS(){
+    public ArrayList<No> DFS(List<No> ordemDFS){
         ArrayList<No> ordem = new ArrayList<No>();
-        for (No vert : this.vertices){
+        for (No vert : ordemDFS){
             if(vert.getCor() == No.Cor.BRANCO){
                 DFSVisit(vert, ordem);
             }
@@ -104,7 +141,31 @@ h: h;
     }
 
     public IGrafo kosaraju(){
+        System.out.println("Aqui");
+        List<No> ordem = this.DFS(this.vertices);
+
+        for (No lista : ordem){
+            System.out.print(lista+" ");
+        }
+
+        GrafoLista transposto =(GrafoLista) this.getArestasTranspostas();
+        
+        System.out.print("\n");
+        transposto.imprimeGrafo();
+        
+        
+        List<No> ordemtransposto = transposto.DFS(ordem);
+        System.out.println("transposto");
+        for (No algo : ordemtransposto){
+            System.out.print(algo+" ");
+        }
+        System.out.println(ordemtransposto.size());
+        System.out.println("transposto");
+        
+        //Floresta floresta = new Floresta(ordem);
+    
         return this;
+
 
         /*
         1. Chamar DFS (V, A) para calcular f[u]
@@ -136,6 +197,10 @@ uma componente fortemente conectada separada
     public IGrafo getArestasTranspostas(){
         
         /* working */
+
+        // Hashmap (exemplo no construtor)
+        // Não modificar o original, criar um novo (precisa terminar o constructor pra isso)
+
         ArrayList<No> auxiliar = new ArrayList<No>();
         
         for(No item : vertices){
@@ -151,16 +216,18 @@ uma componente fortemente conectada separada
             }
             auxiliar.add(aux);
         }
-        vertices = auxiliar;
-        return this;
+        GrafoLista transpostas = new GrafoLista(auxiliar);
+        
+        return transpostas;
     }
 
     // Métodos do GrafoLista
     /*
-    private GrafoLista geraGrafoComponentes(){
-
+    private GrafoLista geraGrafoComponentes(List<No> componentes){
+        this.vertices = componentes;
     }
-*/
+    */
+    
 
     @Override
 
@@ -177,15 +244,18 @@ uma componente fortemente conectada separada
         System.out.println(teste);
         System.out.println(teste.getQtdVertices());
         teste.imprimeGrafo();
-        teste.getArestasTranspostas();
+        //IGrafo algo = teste.getArestasTranspostas();
+        //algo = teste.getArestasTranspostas();
         System.out.println("~~~~");
         //GrafoLista teste2 = new GrafoLista(teste.getArestasTranspostas()); 
-        teste.imprimeGrafo();
+        //algo.imprimeGrafo();
          System.out.println("~~~~");
-        List<No> ordem = teste.DFS();
-        for (No no : ordem){
+         teste.kosaraju();
+        //List<No> ordem = teste.DFS(teste.getVertices());
+        /*for (No no : ordem){
             System.out.printf(no.getValor()+" ");
-        }
+        }*/
+        System.out.println("~~~~");
     }
 
 }
