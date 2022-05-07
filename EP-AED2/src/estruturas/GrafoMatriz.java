@@ -47,7 +47,6 @@ public class GrafoMatriz implements IGrafo {
         //Adicionando os vizinhos
         for(int verticeId = 0; verticeId < qtdVertices; verticeId++) {
             for(String vizinho : todosVizinhos[verticeId]) {
-
                 this.arestas[verticeId][conversorDeValor.get(vizinho.trim())] = true;
             }
         }
@@ -65,28 +64,50 @@ public class GrafoMatriz implements IGrafo {
         }
     }
 
+    private GrafoMatriz(Componente[] componentes) {
+        this.qtdVertices = componentes.length;
+        this.valores = new String[qtdVertices];
+        this.arestas = new boolean[qtdVertices][qtdVertices];
+        this.pais = new int[qtdVertices];
+
+        Map<Componente, Integer> conversorDeValor = new HashMap<>();
+
+        //Fazendo a leitura dos vertices
+        for(int i = 0; i < qtdVertices; i++) {
+            this.pais[i] = -1;
+            this.valores[i] = componentes[i].toString();
+            conversorDeValor.put(componentes[i], i);
+        }
+
+        //Fazendo a leitura dos vizinhos
+        for(int atual = 0; atual < qtdVertices; atual++)
+            for(Componente outro : componentes[atual].getLigacoes()) {
+                final int outroIndex = conversorDeValor.get(outro);
+                this.arestas[atual][outroIndex] = true;
+            }
+    }
+
     // === KOSARAJU === //
     public IGrafo kosaraju() {
         GrafoMatriz transposto = (GrafoMatriz) this.getArestasTranspostas();
         List<Integer> ordemTopo = buscaEmProfundidade();
         transposto.buscaEmProfundidade(ordemTopo);
 
-        System.out.println(ordemTopo);
         Floresta floresta = new Floresta(transposto.valores, transposto.pais);
+        List<Componente> componentes = floresta.geraComponentes();
 
-        for(int i = 0; i < qtdVertices; i++) {
-            String pai = transposto.pais[i] == -1 ? "-" : transposto.valores[transposto.pais[i]];
+        for(int atual = 0; atual < qtdVertices; atual++) {
+            Componente compAtual = Floresta.achaComponente(valores[atual], componentes);
 
-            System.out.println(transposto.valores[i] + ": " + pai);
+            for(int outro = 0; outro < qtdVertices; outro++) {
+                if(arestas[atual][outro] == false)
+                    continue;
+
+                compAtual.addLigacao(Floresta.achaComponente(valores[outro], componentes));
+            }
         }
 
-        String print = "";
-        for(Componente c : floresta.geraComponentes())
-            print += c.getVertices() + "; ";
-
-        System.out.println(print);
-
-        return null;
+        return new GrafoMatriz(componentes.toArray(new Componente[componentes.size()]));
     }
 
     private List<Integer> buscaEmProfundidade() {

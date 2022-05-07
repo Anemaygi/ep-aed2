@@ -75,4 +75,12 @@ public class Floresta {
 
         return ret;
     }
+
+    public static Componente achaComponente(String nomeVer, List<Componente> componentes) {
+        for(Componente c : componentes)
+            if(c.contemVertice(nomeVer))
+                return c;
+
+        return null;
+    }
 }
