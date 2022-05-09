@@ -61,17 +61,17 @@ public class Floresta {
         return ret;
     }
 
-    private List<String> getArvoreComoLista(String no) {
+    private List<String> getArvoreComoLista(String raiz) {
         List<String> ret = new ArrayList<>();
 
-        if(!filhos.containsKey(no.toString())) { //Nao possui filhos
-            ret.add(no.toString());
+        if(!filhos.containsKey(raiz.toString())) { //Nao possui filhos
+            ret.add(raiz.toString());
             return ret;
         }
 
-        for(String filho : filhos.get(no.toString()))
+        for(String filho : filhos.get(raiz.toString()))
             ret.addAll(getArvoreComoLista(filho));
-        ret.add(no.toString());
+        ret.add(raiz.toString());
 
         return ret;
     }
