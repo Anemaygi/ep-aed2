@@ -16,7 +16,7 @@ public class App {
             resul.imprimeGrafo();
         }
         if(num == 2){
-            IGrafo g = new GrafoMatriz(caso2());
+            IGrafo g = new GrafoMatriz(caso1());
             IGrafo resul = g.kosaraju();
             resul.imprimeGrafo();
         }

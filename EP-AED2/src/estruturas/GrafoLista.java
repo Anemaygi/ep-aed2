@@ -28,25 +28,14 @@ public class GrafoLista implements IGrafo{
             String[] separado = linha.split(":");
             if(separado.length > 1){
                 String[] vizinhos = separado[1].split(";");
-                
-                for(No verticeVez : vertices){
-                    if(verticeVez.getValor().equals(separado[0])){
-                        for(String vizinhoVez : vizinhos){
-                            vizinhoVez = vizinhoVez.replace(" ", "");
-                            for(No vizinhoA : vertices){
-                                boolean truea = vizinhoVez.equals(vizinhoA.getValor());
-                                if(vizinhoA.getValor().equals(vizinhoVez)){
-                                    verticeVez.addVizinho(vizinhoA);
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                }            
+                No cadaVertice = findVertice(separado[0],vertices);
+                for(String vizinhoVez : vizinhos){
+                    vizinhoVez = vizinhoVez.replace(" ", "");
+                    cadaVertice.addVizinho(findVertice(vizinhoVez, vertices));
+                }          
             }
         }
         this.vertices = vertices;
-
     }
 
     private GrafoLista(List<No> componentes, char x){
@@ -60,19 +49,9 @@ public class GrafoLista implements IGrafo{
             grafoDeComponentes.add(aux);
         }
         for (Componente componente : componentes){
-            for(No item : grafoDeComponentes){
-                if (item.getValor().equals(componente.toString())){
-                    for (Componente vizinho:componente.getLigacoes()){
-                        for(No cada : grafoDeComponentes){
-                           
-                            if(cada.getValor().equals(vizinho.toString())){
-                                
-                                item.addVizinho(cada);
-                                break;
-                            }
-                        }
-                    }
-                }
+            No aux1 = findVertice(componente.toString(),grafoDeComponentes);
+            for (Componente vizinho:componente.getLigacoes()){
+                aux1.addVizinho(findVertice(vizinho.toString(),grafoDeComponentes));
             }
         }
         this.vertices = grafoDeComponentes;
@@ -187,18 +166,8 @@ public class GrafoLista implements IGrafo{
             for(No itemcompare : vertices){ 
                 for(No vizinho : itemcompare.getVizinhos()){ 
                     if(vizinho == item){
-                       for(No coisa : auxiliar){
-                           if(coisa.getValor().equals(item.getValor())){
-                               System.out.println("teste "+findVertice(coisa.getValor(),auxiliar).getValor());
-                               for(No coisinha : auxiliar){
-                                   if(itemcompare.getValor().equals(coisinha.getValor())){
-                                       coisa.addVizinho(coisinha);
-                                       break;
-                                   }
-                               }
-                               break;
-                           }
-                       }
+                       No auxi = findVertice(item.getValor(),auxiliar);
+                       auxi.addVizinho(findVertice(itemcompare.getValor(),auxiliar));
                        
                     }
                 }
