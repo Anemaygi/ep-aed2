@@ -15,6 +15,8 @@ public class App {
         if(num == 1){
             IGrafo g = new GrafoLista(caso3());
             IGrafo resul = g.kosaraju();
+            System.out.println(resul.getQtdVertices() == 1 ? "Sim":"Não");
+            System.out.println(resul.getQtdVertices());
             resul.imprimeGrafo();
         }
     }

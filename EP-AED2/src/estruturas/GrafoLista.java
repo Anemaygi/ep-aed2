@@ -232,6 +232,12 @@ public class GrafoLista implements IGrafo{
 
     public void imprimeGrafo(){
         /* working */        
+        List<No> componentesDFS = this.DFS(this.getVertices());
+        for (No componente : componentesDFS){
+            System.out.printf(componente+" ");
+        }
+        System.out.printf("\n");
+
         for (No item : vertices) {
             System.out.printf(item+": ");
             for(No vizinho : item.getVizinhos()){
