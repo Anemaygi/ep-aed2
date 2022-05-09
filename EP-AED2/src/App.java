@@ -7,16 +7,17 @@ import interfaces.IGrafo;
 public class App {
     public static void main(String[] args) throws Exception {
         int num = 1;
-        if(num == 2){
-            IGrafo g = new GrafoMatriz(caso2());
-            IGrafo resul = g.kosaraju();
-            resul.imprimeGrafo();
-        }
+                
         if(num == 1){
             IGrafo g = new GrafoLista(caso3());
             IGrafo resul = g.kosaraju();
             System.out.println(resul.getQtdVertices() == 1 ? "Sim":"Não");
             System.out.println(resul.getQtdVertices());
+            resul.imprimeGrafo();
+        }
+        if(num == 2){
+            IGrafo g = new GrafoMatriz(caso2());
+            IGrafo resul = g.kosaraju();
             resul.imprimeGrafo();
         }
     }

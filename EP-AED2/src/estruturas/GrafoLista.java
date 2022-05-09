@@ -36,7 +36,6 @@ public class GrafoLista implements IGrafo{
                             for(No vizinhoA : vertices){
                                 boolean truea = vizinhoVez.equals(vizinhoA.getValor());
                                 if(vizinhoA.getValor().equals(vizinhoVez)){
-                                    
                                     verticeVez.addVizinho(vizinhoA);
                                     break;
                                 }
@@ -168,13 +167,16 @@ public class GrafoLista implements IGrafo{
         return this.vertices;
     }
 
+    public static No findVertice(String valor, List<No> lista){
+        for(No item : lista){
+            if(item.getValor().equals(valor)) return item;
+        }
+        return null;
+    }
+
     public IGrafo getArestasTranspostas(){
-        
         /* working */
-
         // Hashmap (exemplo no construtor)
-        // Não modificar o original, criar um novo (precisa terminar o constructor pra isso)
-
         ArrayList<No> auxiliar = new ArrayList<No>();
         
         for(No item : vertices){
@@ -182,13 +184,12 @@ public class GrafoLista implements IGrafo{
             auxiliar.add(aux);
         }
         for(No item : vertices){ 
-
             for(No itemcompare : vertices){ 
-                
                 for(No vizinho : itemcompare.getVizinhos()){ 
                     if(vizinho == item){
                        for(No coisa : auxiliar){
                            if(coisa.getValor().equals(item.getValor())){
+                               System.out.println("teste "+findVertice(coisa.getValor(),auxiliar).getValor());
                                for(No coisinha : auxiliar){
                                    if(itemcompare.getValor().equals(coisinha.getValor())){
                                        coisa.addVizinho(coisinha);
