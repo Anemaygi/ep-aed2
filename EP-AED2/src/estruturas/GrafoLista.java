@@ -1,9 +1,13 @@
 package estruturas;
 
 import estruturas.No;
+import estruturas.Floresta;
+import estruturas.Componente;
+import estruturas.No.Cor;
 import interfaces.IGrafo;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class GrafoLista implements IGrafo{
     // atributos
@@ -48,24 +52,25 @@ public class GrafoLista implements IGrafo{
         this.vertices = vertices;
         */
 
-        No n2 = new No("2");
-        No n3 = new No("3");
-        No n5 = new No("5");
-        No n7 = new No("7");
-        No n8 = new No("8");
-        No n9 = new No("9");
-        No n10 = new No("10");
-        No n11 = new No("11");
-
-        n7.addVizinho(n11);
-        n7.addVizinho(n8);
-        n5.addVizinho(n11);
+        No n2 = new No("2"); // 
+        No n3 = new No("3"); // 8 e 10
+        No n5 = new No("5"); // 11
+        No n7 = new No("7"); // 8 e 11
+        No n8 = new No("8"); // 9
+        No n9 = new No("9"); // 
+        No n10 = new No("10"); // 
+        No n11 = new No("11");// 2 9 10
+        
         n3.addVizinho(n8);
         n3.addVizinho(n10);
+        n5.addVizinho(n11);
+        n7.addVizinho(n8);
+        n7.addVizinho(n11);
+        n8.addVizinho(n9);
         n11.addVizinho(n2);
         n11.addVizinho(n9);
         n11.addVizinho(n10);
-        n8.addVizinho(n9);
+        
 
         ArrayList<No> vertices = new ArrayList<No>();
         vertices.add(n2);
@@ -81,15 +86,70 @@ public class GrafoLista implements IGrafo{
 
     }
 
-    //teste
-    /*
-    public GrafoLista(List<No> vertices){
+
+    public GrafoLista(List<String> entrada){
+        // Adicionando os vértices
+        List<No> vertices = new ArrayList<No>();
+        for(String linha : entrada){
+            String[] separado = linha.split(":");
+            No aux = new No(separado[0]);
+            vertices.add(aux);                       
+        }
+        // Adicionando as arestas
+        for(String linha : entrada){
+            String[] separado = linha.split(":");
+            String[] vizinhos = separado[1].split(";");
+            for(No verticeVez : vertices){
+                if(verticeVez.getValor().equals(separado[0])){
+                    for(String vizinhoVez : vizinhos){
+                        vizinhoVez = vizinhoVez.replace(" ", "");
+                        for(No vizinhoA : vertices){
+                            boolean truea = vizinhoVez.equals(vizinhoA.getValor());
+                            if(vizinhoA.getValor().equals(vizinhoVez)){
+                                System.out.println("adicionou");
+                                verticeVez.addVizinho(vizinhoA);
+                                break;
+                            }
+                        }
+                    }
+                }
+            }            
+        }
         this.vertices = vertices;
+
     }
-    */
-    private GrafoLista(List<No> componentes){
+
+    private GrafoLista(List<No> componentes, char x){
         this.vertices = componentes;
     }
+
+    private GrafoLista(List<Componente> componentes, int x){
+        
+        List<No> grafoDeComponentes = new ArrayList<No>();
+        for (Componente componente : componentes){
+            No aux = new No(componente.toString());
+            grafoDeComponentes.add(aux);
+        }
+        for (Componente componente : componentes){
+            for(No item : grafoDeComponentes){
+                if (item.getValor().equals(componente.toString())){
+                    for (Componente vizinho:componente.getLigacoes()){
+                        for(No cada : grafoDeComponentes){
+                           
+                            if(cada.getValor().equals(vizinho.toString())){
+                                
+                                item.addVizinho(cada);
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        this.vertices = grafoDeComponentes;
+        
+    }
+
     /*
     
     
@@ -119,64 +179,67 @@ h: h;
  */   
 
     public ArrayList<No> DFS(List<No> ordemDFS){
-        ArrayList<No> ordem = new ArrayList<No>();
+        ArrayList<No> topologica = new ArrayList<No>();
         for (No vert : ordemDFS){
-            if(vert.getCor() == No.Cor.BRANCO){
-                DFSVisit(vert, ordem);
+            if(vert.getCor() == Cor.BRANCO){
+                DFSVisit(vert, topologica);
             }
         }
-        return ordem;
+        return topologica;
     }
 
-    public void DFSVisit(No vert, List<No> ordem){
-        vert.setCor(No.Cor.CINZA);
+    public void DFSVisit(No vert, List<No> topologica){
+        vert.setCor(Cor.CINZA);
         for (No vizinho : vert.getVizinhos()){
-            if(vizinho.getCor() == No.Cor.BRANCO){
+            if(vizinho.getCor() == Cor.BRANCO){
                 vizinho.setPai(vert);
-                DFSVisit(vizinho, ordem);
+                DFSVisit(vizinho, topologica);
             }
         }
-        vert.setCor(No.Cor.PRETO);
-        ordem.add(0,vert);
+        vert.setCor(Cor.PRETO);
+        topologica.add(0,vert);
+    }
+
+    private void limpaVertices(){
+        for (No no : vertices){
+            no.setCor(Cor.BRANCO);
+        }
     }
 
     public IGrafo kosaraju(){
-        System.out.println("Aqui");
+        //System.out.println("Aqui");
         
         // Cria o grafo transposto - OK
         GrafoLista transposto =(GrafoLista) this.getArestasTranspostas();
-        transposto.imprimeGrafo();
-                
-        List<No> ordem = this.DFS(this.vertices);
+        //transposto.imprimeGrafo();
+        List<No> ordem = this.vertices;        
+        ordem = this.DFS(ordem);
 
-        for (No lista : ordem){
+        /*for (No lista : ordem){
             System.out.print(lista+" ");
-        }
-      
-        
-        List<No> ordemtransposto = transposto.DFS(ordem);
-        System.out.println("transposto");
-        for (No algo : ordemtransposto){
-            System.out.print(algo+" ");
-        }
-        System.out.println(ordemtransposto.size());
-        
-        System.out.println("transposto");
-        
-        //Floresta floresta = new Floresta(ordem);
-    
-        return this;
+        }*/
 
+        limpaVertices();
 
-        /*
-        1. Chamar DFS (V, A) para calcular f[u]
-        2. Calcular A T
-        3. Chamar DFS (V, A T ) considerando no laço principal
-os vértices em ordem decrescente de f (calculados na
-linha 1)
-        4. Devolva os vértices de cada árvore resultante da linha 3 como
-uma componente fortemente conectada separada
-         */
+        ordem = transposto.DFS(ordem);
+        /*for (No lista : ordem){
+            System.out.print(lista+" ");
+        }*/
+
+        Floresta floresta = new Floresta(vertices);
+        List<Componente> componentes = floresta.geraComponentes();
+        for(No vertice : vertices){
+            Componente compatual = Floresta.achaComponente(vertice.getValor(),componentes);
+            for(No vizinho : vertice.getVizinhos()){
+                if(compatual == Floresta.achaComponente(vizinho.getValor(),componentes)){
+                    continue;
+                }
+                compatual.addLigacao(Floresta.achaComponente(vizinho.getValor(),componentes));
+            }
+        }
+        
+        GrafoLista grafoDeComponentes = new GrafoLista(componentes,0);
+        return grafoDeComponentes;
     }
 
     public void imprimeGrafo(){
@@ -193,6 +256,10 @@ uma componente fortemente conectada separada
     public int getQtdVertices(){
         /* working */
         return vertices.size();
+    }
+
+    public List<No> getVertices(){
+        return this.vertices;
     }
 
     public IGrafo getArestasTranspostas(){
@@ -217,7 +284,7 @@ uma componente fortemente conectada separada
             }
             auxiliar.add(aux);
         }
-        GrafoLista transpostas = new GrafoLista(auxiliar);
+        GrafoLista transpostas = new GrafoLista(auxiliar,'a');
         
         return transpostas;
     }
@@ -240,23 +307,44 @@ uma componente fortemente conectada separada
         return saida;
     }
 
+    public void resultado(){
+        GrafoLista grafoComponentes = (GrafoLista) this.kosaraju();
+        System.out.println(grafoComponentes.getQtdVertices() == 1 ? "Sim":"Não");
+        System.out.println(grafoComponentes.getQtdVertices());
+        List<No> componentesDFS = grafoComponentes.DFS(grafoComponentes.getVertices());
+        for (No componente : componentesDFS){
+            System.out.printf(componente+" ");
+        }
+        System.out.printf("\n");
+        grafoComponentes.imprimeGrafo();
+    }
+
+    
     public static void main(String args[]) {
+       /*IGrafo g = new GrafoLista(List.of(
+            "a: b;",
+            "b: c; e; f;",
+            "c: d; g;",
+            "d: c; h;",
+            "e: a; f;",
+            "f: g;",
+            "g: f; h;",
+            "h: h;"
+            ));
+        /*g.imprimeGrafo();
+            
         GrafoLista teste = new GrafoLista();
-        System.out.println(teste);
-        System.out.println(teste.getQtdVertices());
-        teste.imprimeGrafo();
-        //IGrafo algo = teste.getArestasTranspostas();
-        //algo = teste.getArestasTranspostas();
-        System.out.println("~~~~");
-        //GrafoLista teste2 = new GrafoLista(teste.getArestasTranspostas()); 
-        //algo.imprimeGrafo();
-         System.out.println("~~~~");
-         teste.kosaraju();
-        //List<No> ordem = teste.DFS(teste.getVertices());
-        /*for (No no : ordem){
-            System.out.printf(no.getValor()+" ");
-        }*/
-        System.out.println("~~~~");
+        GrafoLista grafoComponentes = (GrafoLista) teste.kosaraju();
+        System.out.println(grafoComponentes.getQtdVertices() == 1 ? "Sim":"Não");
+        System.out.println(grafoComponentes.getQtdVertices());
+        List<No> componentesDFS = grafoComponentes.DFS(grafoComponentes.getVertices());
+        for (No componente : componentesDFS){
+            System.out.printf(componente+" ");
+        }
+        System.out.printf("\n");
+        grafoComponentes.imprimeGrafo();*/
+        GrafoLista teste = new GrafoLista();
+        teste.resultado();
     }
 
 }
