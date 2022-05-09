@@ -13,7 +13,7 @@ public class App {
             resul.imprimeGrafo();
         }
         if(num == 1){
-            IGrafo g = new GrafoLista(caso1());
+            IGrafo g = new GrafoLista(caso3());
             IGrafo resul = g.kosaraju();
             resul.imprimeGrafo();
         }

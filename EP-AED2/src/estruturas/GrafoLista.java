@@ -159,14 +159,8 @@ public class GrafoLista implements IGrafo{
 
     public ArrayList<No> DFS(List<No> ordemDFS){
         ArrayList<No> topologica = new ArrayList<No>();
-        for (No vert : ordemDFS){
-            /*for(No quem : vert.getVizinhos()){
-                System.out.println("o vizinho de "+vert.getValor()+" é "+quem.getValor());
-            }*/
-            
-            
+        for (No vert : ordemDFS){           
             if(vert.getCor() == Cor.BRANCO){
-                System.out.println("visitando " +vert.getValor());
                 DFSVisit(vert, topologica);
             }
         }
@@ -174,20 +168,15 @@ public class GrafoLista implements IGrafo{
     }
 
     public void DFSVisit(No vert, List<No> topologica){
-        //System.out.println("Visitando o "+vert.getValor());
         vert.setCor(Cor.CINZA);
-        //System.out.println("Estou cinza! Sou o "+vert.getValor());
         for (No vizinho : vert.getVizinhos()){
-            
+        
             if(vizinho.getCor() == Cor.BRANCO){
-
-                //System.out.println("Sou o vizinho de "+vert.getValor() +", o :"+vizinho.getValor());
                 vizinho.setPai(vert);
                 DFSVisit(vizinho, topologica);
             }
         }
         vert.setCor(Cor.PRETO);
-        //System.out.println("Estou Preto! Sou o "+vert.getValor());
         topologica.add(0,vert);
     }
 
@@ -205,6 +194,7 @@ public class GrafoLista implements IGrafo{
                 
                 if(cada.getValor().equals(item.getValor())){
                     novo.add(cada);
+                                       
                     break;
                 }
             }
@@ -216,37 +206,15 @@ public class GrafoLista implements IGrafo{
 
         GrafoLista transposto =(GrafoLista) this.getArestasTranspostas();
   
-        //debug
-        this.imprimeGrafo();
-        
 
         List<No> ordem = this.vertices;        
-        ordem = this.DFS(ordem); // os itens daqui estão com os vizinhos do normal
-        System.out.println("Ordenação topologica do normal:");
-        for (No item : ordem){
-            System.out.printf(item+" ");
-        }
+        ordem = this.DFS(ordem); 
 
-        limpaVertices(); // funcionando tb
-
+        limpaVertices(); 
         
-        // ERRO NO DFS DO TRANSPOSTO
-        System.out.println("\nTransposto:");
-        transposto.imprimeGrafo();
-        
-        //List<No> ordemt = transposto.mudaVizinhos(ordem);
-        /*for(No item:ordemt){
-            for(No vizinho:item.getVizinhos()){
-                System.out.println("O vizinho de "+item.getValor()+" é "+vizinho.getValor());
-            }
-        }*/
         List<No> ordemtr = transposto.DFS(transposto.mudaVizinhos(ordem));
-        for (No item : ordemtr){
-            System.out.printf(item+" ");
-        }
-         System.out.printf("\n");
 
-        Floresta floresta = new Floresta(vertices);
+        Floresta floresta = new Floresta(transposto.vertices);
         List<Componente> componentes = floresta.geraComponentes();
         for(No vertice : vertices){
             Componente compatual = Floresta.achaComponente(vertice.getValor(),componentes);
@@ -293,16 +261,31 @@ public class GrafoLista implements IGrafo{
         
         for(No item : vertices){
             No aux = new No(item.getValor());
-            for(No itemcompare : vertices){
-                //if (itemcompare == item) continue;
-                for(No vizinho : itemcompare.getVizinhos()){
+            auxiliar.add(aux);
+        }
+        for(No item : vertices){ 
+
+            for(No itemcompare : vertices){ 
+                
+                for(No vizinho : itemcompare.getVizinhos()){ 
                     if(vizinho == item){
-                       aux.addVizinho(itemcompare); 
+                       for(No coisa : auxiliar){
+                           if(coisa.getValor().equals(item.getValor())){
+                               for(No coisinha : auxiliar){
+                                   if(itemcompare.getValor().equals(coisinha.getValor())){
+                                       coisa.addVizinho(coisinha);
+                                       break;
+                                   }
+                               }
+                               break;
+                           }
+                       }
+                       
                     }
                 }
                 
             }
-            auxiliar.add(aux);
+            
         }
         GrafoLista transpostas = new GrafoLista(auxiliar,'a');
         
