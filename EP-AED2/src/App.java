@@ -1,14 +1,22 @@
 import java.util.List;
 
 import estruturas.GrafoMatriz;
+import estruturas.GrafoLista;
 import interfaces.IGrafo;
 
 public class App {
     public static void main(String[] args) throws Exception {
-        IGrafo g = new GrafoMatriz(caso2());
-        
-        IGrafo resul = g.kosaraju();
-        resul.imprimeGrafo();
+        int num = 1;
+        if(num == 2){
+            IGrafo g = new GrafoMatriz(caso2());
+            IGrafo resul = g.kosaraju();
+            resul.imprimeGrafo();
+        }
+        if(num == 1){
+            IGrafo g = new GrafoLista(caso1());
+            IGrafo resul = g.kosaraju();
+            resul.imprimeGrafo();
+        }
     }
 
     public static List<String> caso1() {

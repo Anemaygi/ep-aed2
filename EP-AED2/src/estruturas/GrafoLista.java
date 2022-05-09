@@ -98,22 +98,25 @@ public class GrafoLista implements IGrafo{
         // Adicionando as arestas
         for(String linha : entrada){
             String[] separado = linha.split(":");
-            String[] vizinhos = separado[1].split(";");
-            for(No verticeVez : vertices){
-                if(verticeVez.getValor().equals(separado[0])){
-                    for(String vizinhoVez : vizinhos){
-                        vizinhoVez = vizinhoVez.replace(" ", "");
-                        for(No vizinhoA : vertices){
-                            boolean truea = vizinhoVez.equals(vizinhoA.getValor());
-                            if(vizinhoA.getValor().equals(vizinhoVez)){
-                                System.out.println("adicionou");
-                                verticeVez.addVizinho(vizinhoA);
-                                break;
+            if(separado.length > 1){
+                String[] vizinhos = separado[1].split(";");
+                
+                for(No verticeVez : vertices){
+                    if(verticeVez.getValor().equals(separado[0])){
+                        for(String vizinhoVez : vizinhos){
+                            vizinhoVez = vizinhoVez.replace(" ", "");
+                            for(No vizinhoA : vertices){
+                                boolean truea = vizinhoVez.equals(vizinhoA.getValor());
+                                if(vizinhoA.getValor().equals(vizinhoVez)){
+                                    
+                                    verticeVez.addVizinho(vizinhoA);
+                                    break;
+                                }
                             }
                         }
                     }
-                }
-            }            
+                }            
+            }
         }
         this.vertices = vertices;
 
@@ -150,38 +153,20 @@ public class GrafoLista implements IGrafo{
         
     }
 
-    /*
-    
-    
-    
-    
-    }
-/*
-
-8
-a: b;
-b: c; e; f;
-c: d; g;
-d: c; h;
-e: a; f;
-f: g;
-g: f; h;
-h: h;
-2
-
- 
- //   
-    public GrafoLista(List<Componente> componentes){
-        // constructor 2
-    }
-    
+  
     // Métodos da interface
- */   
+  
 
     public ArrayList<No> DFS(List<No> ordemDFS){
         ArrayList<No> topologica = new ArrayList<No>();
         for (No vert : ordemDFS){
+            /*for(No quem : vert.getVizinhos()){
+                System.out.println("o vizinho de "+vert.getValor()+" é "+quem.getValor());
+            }*/
+            
+            
             if(vert.getCor() == Cor.BRANCO){
+                System.out.println("visitando " +vert.getValor());
                 DFSVisit(vert, topologica);
             }
         }
@@ -189,14 +174,20 @@ h: h;
     }
 
     public void DFSVisit(No vert, List<No> topologica){
+        //System.out.println("Visitando o "+vert.getValor());
         vert.setCor(Cor.CINZA);
+        //System.out.println("Estou cinza! Sou o "+vert.getValor());
         for (No vizinho : vert.getVizinhos()){
+            
             if(vizinho.getCor() == Cor.BRANCO){
+
+                //System.out.println("Sou o vizinho de "+vert.getValor() +", o :"+vizinho.getValor());
                 vizinho.setPai(vert);
                 DFSVisit(vizinho, topologica);
             }
         }
         vert.setCor(Cor.PRETO);
+        //System.out.println("Estou Preto! Sou o "+vert.getValor());
         topologica.add(0,vert);
     }
 
@@ -206,25 +197,54 @@ h: h;
         }
     }
 
+    private List<No> mudaVizinhos(List<No> trocaVertice){
+        List<No> novo = new ArrayList<No>();
+        for(No item : trocaVertice){
+            
+            for(No cada : this.vertices){
+                
+                if(cada.getValor().equals(item.getValor())){
+                    novo.add(cada);
+                    break;
+                }
+            }
+        }
+        return novo;
+    }
+
     public IGrafo kosaraju(){
-        //System.out.println("Aqui");
-        
-        // Cria o grafo transposto - OK
+
         GrafoLista transposto =(GrafoLista) this.getArestasTranspostas();
-        //transposto.imprimeGrafo();
+  
+        //debug
+        this.imprimeGrafo();
+        
+
         List<No> ordem = this.vertices;        
-        ordem = this.DFS(ordem);
+        ordem = this.DFS(ordem); // os itens daqui estão com os vizinhos do normal
+        System.out.println("Ordenação topologica do normal:");
+        for (No item : ordem){
+            System.out.printf(item+" ");
+        }
 
-        /*for (No lista : ordem){
-            System.out.print(lista+" ");
+        limpaVertices(); // funcionando tb
+
+        
+        // ERRO NO DFS DO TRANSPOSTO
+        System.out.println("\nTransposto:");
+        transposto.imprimeGrafo();
+        
+        //List<No> ordemt = transposto.mudaVizinhos(ordem);
+        /*for(No item:ordemt){
+            for(No vizinho:item.getVizinhos()){
+                System.out.println("O vizinho de "+item.getValor()+" é "+vizinho.getValor());
+            }
         }*/
-
-        limpaVertices();
-
-        ordem = transposto.DFS(ordem);
-        /*for (No lista : ordem){
-            System.out.print(lista+" ");
-        }*/
+        List<No> ordemtr = transposto.DFS(transposto.mudaVizinhos(ordem));
+        for (No item : ordemtr){
+            System.out.printf(item+" ");
+        }
+         System.out.printf("\n");
 
         Floresta floresta = new Floresta(vertices);
         List<Componente> componentes = floresta.geraComponentes();
