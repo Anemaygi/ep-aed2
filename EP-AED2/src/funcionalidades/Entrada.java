@@ -18,17 +18,6 @@ public class Entrada{
         return this.estrutura;
     } 
 
-    //private 
-
-/*
-    public void setEntrada(List<String> entrada){
-        this.entrada = entrada;
-    }
-
-    public void setEstrutura(String estrutura){
-        this.estrutura = estrutura;
-    } 
-*/
     public Entrada(List<String> entrada, String estrutura){
         this.entrada = entrada;
         this.estrutura = estrutura;
