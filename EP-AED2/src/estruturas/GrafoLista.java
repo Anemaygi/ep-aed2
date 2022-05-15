@@ -84,26 +84,12 @@ public class GrafoLista implements IGrafo{
         }
     }
 
-    //TODO: perguntar sobre
-    private List<No> mudaVizinhos(List<No> trocaVertice){
-        List<No> novo = new ArrayList<No>();
-        for(No item : trocaVertice){
-            for(No cada : this.vertices){
-                if(cada.getValor().equals(item.getValor())){
-                    novo.add(cada);
-                    break;
-                }
-            }
-        }
-        return novo;
-    }
-
     public IGrafo kosaraju(){
         GrafoLista transposto =(GrafoLista) this.getArestasTranspostas();
         List<No> ordem = this.vertices;        
         ordem = this.DFS(ordem); 
         limpaVertices(); 
-        transposto.DFS(transposto.mudaVizinhos(ordem));
+        transposto.DFS(transposto.getVertices());
         Floresta floresta = new Floresta(transposto.vertices);
         List<Componente> componentes = floresta.geraComponentes();
         for(No vertice : vertices){
@@ -153,28 +139,6 @@ public class GrafoLista implements IGrafo{
     }
 
     public IGrafo getArestasTranspostas(){
-        // Hashmap (exemplo no construtor)
-        // ArrayList<No> auxiliar = new ArrayList<No>();    
-        // for(No item : vertices)
-        //     auxiliar.add(new No(item.getValor()));
-        
-        // for(No item : vertices){ 
-        //     for(No itemcompare : vertices){ 
-        //         for(No vizinho : itemcompare.getVizinhos()){ 
-        //             if(vizinho == item){
-        //                No auxi = findVertice(item.getValor(),auxiliar);
-        //                auxi.addVizinho(findVertice(itemcompare.getValor(),auxiliar)); 
-        //             }
-        //         }
-                
-        //     }
-            
-        // }
-
-        // GrafoLista transpostas = new GrafoLista(auxiliar,'a');
-        // return transpostas;
-
-        // SUGESTAO
         Map<String, No> mapaVersTrans = new HashMap<>();
         List<No> novosVertices = new ArrayList<>();
 
@@ -187,12 +151,12 @@ public class GrafoLista implements IGrafo{
         }
 
         //Adicionando os vizinhos
-        for(No atual : vertices)
-            for(No viz : atual.getVizinhos()) {
-                No vizinhoTransposto = mapaVersTrans.get(atual.getValor());
+        for(No atual : vertices) {
+            No vizinhoTransposto = mapaVersTrans.get(atual.getValor());
 
+            for(No viz : atual.getVizinhos())
                 mapaVersTrans.get(viz.getValor()).addVizinho(vizinhoTransposto);
-            }        
+        }
 
         return new GrafoLista(novosVertices, 'x');
     }
