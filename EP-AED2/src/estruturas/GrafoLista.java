@@ -3,7 +3,9 @@ package estruturas;
 import estruturas.No.Cor;
 import interfaces.IGrafo;
 import java.util.List;
+import java.util.Map;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 
 public class GrafoLista implements IGrafo{
@@ -40,14 +42,14 @@ public class GrafoLista implements IGrafo{
 
     private GrafoLista(List<Componente> componentes, int x){
         List<No> grafoDeComponentes = new ArrayList<No>();
+        for (Componente componente : componentes)
+            grafoDeComponentes.add(new No(componente.toString()));
+
         for (Componente componente : componentes){
-            No aux = new No(componente.toString());
-            grafoDeComponentes.add(aux);
-        }
-        for (Componente componente : componentes){
-            No aux1 = findVertice(componente.toString(),grafoDeComponentes);
+            No achado = findVertice(componente.toString(),grafoDeComponentes);
+
             for (Componente vizinho:componente.getLigacoes()){
-                aux1.addVizinho(findVertice(vizinho.toString(),grafoDeComponentes));
+                achado.addVizinho(findVertice(vizinho.toString(),grafoDeComponentes));
             }
         }
         this.vertices = grafoDeComponentes;
@@ -82,6 +84,7 @@ public class GrafoLista implements IGrafo{
         }
     }
 
+    //TODO: perguntar sobre
     private List<No> mudaVizinhos(List<No> trocaVertice){
         List<No> novo = new ArrayList<No>();
         for(No item : trocaVertice){
@@ -151,25 +154,47 @@ public class GrafoLista implements IGrafo{
 
     public IGrafo getArestasTranspostas(){
         // Hashmap (exemplo no construtor)
-        ArrayList<No> auxiliar = new ArrayList<No>();    
-        for(No item : vertices){
-            No aux = new No(item.getValor());
-            auxiliar.add(aux);
-        }
-        for(No item : vertices){ 
-            for(No itemcompare : vertices){ 
-                for(No vizinho : itemcompare.getVizinhos()){ 
-                    if(vizinho == item){
-                       No auxi = findVertice(item.getValor(),auxiliar);
-                       auxi.addVizinho(findVertice(itemcompare.getValor(),auxiliar)); 
-                    }
-                }
+        // ArrayList<No> auxiliar = new ArrayList<No>();    
+        // for(No item : vertices)
+        //     auxiliar.add(new No(item.getValor()));
+        
+        // for(No item : vertices){ 
+        //     for(No itemcompare : vertices){ 
+        //         for(No vizinho : itemcompare.getVizinhos()){ 
+        //             if(vizinho == item){
+        //                No auxi = findVertice(item.getValor(),auxiliar);
+        //                auxi.addVizinho(findVertice(itemcompare.getValor(),auxiliar)); 
+        //             }
+        //         }
                 
-            }
+        //     }
             
+        // }
+
+        // GrafoLista transpostas = new GrafoLista(auxiliar,'a');
+        // return transpostas;
+
+        // SUGESTAO
+        Map<String, No> mapaVersTrans = new HashMap<>();
+        List<No> novosVertices = new ArrayList<>();
+
+        //Gerando os nos pela primeira vez
+        for(No atual : vertices) {
+            No novoNoTransposto = new No(atual.getValor());
+
+            mapaVersTrans.put(atual.getValor(), novoNoTransposto);
+            novosVertices.add(novoNoTransposto);
         }
-        GrafoLista transpostas = new GrafoLista(auxiliar,'a');
-        return transpostas;
+
+        //Adicionando os vizinhos
+        for(No atual : vertices)
+            for(No viz : atual.getVizinhos()) {
+                No vizinhoTransposto = mapaVersTrans.get(atual.getValor());
+
+                mapaVersTrans.get(viz.getValor()).addVizinho(vizinhoTransposto);
+            }        
+
+        return new GrafoLista(novosVertices, 'x');
     }
 
     @Override
