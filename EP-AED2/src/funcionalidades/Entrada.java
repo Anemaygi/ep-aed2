@@ -18,7 +18,7 @@ public class Entrada{
         return this.estrutura;
     } 
 
-    public Entrada(List<String> entrada, String estrutura){
+    private Entrada(List<String> entrada, String estrutura){
         this.entrada = entrada;
         this.estrutura = estrutura;
     }
