@@ -18,6 +18,9 @@ public class Entrada{
         return this.estrutura;
     } 
 
+    //private 
+
+/*
     public void setEntrada(List<String> entrada){
         this.entrada = entrada;
     }
@@ -25,10 +28,13 @@ public class Entrada{
     public void setEstrutura(String estrutura){
         this.estrutura = estrutura;
     } 
-
+*/
+    public Entrada(List<String> entrada, String estrutura){
+        this.entrada = entrada;
+        this.estrutura = estrutura;
+    }
         
     public static Entrada pegarEntrada(String argumento) throws FileNotFoundException{
-        Entrada objeto = new Entrada();
         List<String> entrada = new ArrayList<String>();
         
         File arquivo = new File(argumento);
@@ -37,11 +43,9 @@ public class Entrada{
             entrada.add(scanner.nextLine());
         }
         scanner.close();
-        objeto.setEstrutura(entrada.get(entrada.size()-1));
-        entrada.remove(entrada.get(0));
+        String estrutura = entrada.get(entrada.size()-1);
         entrada.remove(entrada.get(entrada.size()-1));
-        objeto.setEntrada(entrada);
-
-        return objeto;
+        entrada.remove(entrada.get(0));
+        return new Entrada(entrada, estrutura);
     }
 }

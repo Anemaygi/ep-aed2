@@ -8,11 +8,7 @@ import funcionalidades.Entrada;
 public class App {
     public static void main(String[] args) throws Exception {
         Entrada entrada = Entrada.pegarEntrada(args[0]);
-        
-        //List<String> entrada = Entrada.pegarEntrada(args[0]);
-        //String estrutura = entrada.get(entrada.size()-1);
-        //entrada.remove(entrada.size()-1);
-
+ 
         IGrafo g = null;
         if(entrada.getEstrutura().equals("1"))
             g = new GrafoLista(entrada.getEntrada());
