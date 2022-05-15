@@ -13,7 +13,7 @@ public class App {
         if(entrada.getEstrutura().equals("1"))
             g = new GrafoLista(entrada.getEntrada());
         else if(entrada.getEstrutura().equals("2"))
-            g = new GrafoMatriz(entrada.getEntrada());
+            g = GrafoMatriz.leGrafoDeEntrada(entrada.getEntrada());
   
         IGrafo resul = g.kosaraju();
         System.out.println(resul.getQtdVertices() == 1 ? "Sim":"Não");

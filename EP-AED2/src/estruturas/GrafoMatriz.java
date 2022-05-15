@@ -17,11 +17,10 @@ public class GrafoMatriz implements IGrafo {
     private final int qtdVertices;
 
     // === CONSTRUTORES === //
-    public GrafoMatriz(List<String> vertices) {
-        this.qtdVertices = vertices.size();
-        this.valores = new String[qtdVertices];
-        this.arestas = new boolean[qtdVertices][qtdVertices];
-        this.pais = new int[qtdVertices];
+    public static IGrafo leGrafoDeEntrada(List<String> vertices) {
+        final int qtdVertices = vertices.size();
+        String[] valoresAUsar = new String[qtdVertices];
+        GrafoMatriz ret;
 
         String[][] todosVizinhos = new String[qtdVertices][];
         //Como teremos que converter varios valores dos vizinhos para ids, um map acelera o processo
@@ -33,23 +32,26 @@ public class GrafoMatriz implements IGrafo {
             String[] entradaQuebrada = vertice.split(": ");
 
             if(entradaQuebrada.length > 1) {
-                this.valores[verticeId] = entradaQuebrada[0];
+                valoresAUsar[verticeId] = entradaQuebrada[0];
                 todosVizinhos[verticeId] = entradaQuebrada[1].split(";");
             } else {
-                this.valores[verticeId] = vertice.substring(0, vertice.length() - 1);
+                valoresAUsar[verticeId] = vertice.substring(0, vertice.length() - 1);
                 todosVizinhos[verticeId] = new String[0];
             }
-            this.pais[verticeId] = -1;
 
-            conversorDeValor.put(this.valores[verticeId], verticeId);
+            conversorDeValor.put(valoresAUsar[verticeId], verticeId);
         }
+
+        ret = new GrafoMatriz(valoresAUsar);
 
         //Adicionando os vizinhos
         for(int verticeId = 0; verticeId < qtdVertices; verticeId++) {
             for(String vizinho : todosVizinhos[verticeId]) {
-                this.arestas[verticeId][conversorDeValor.get(vizinho.trim())] = true;
+                ret.arestas[verticeId][conversorDeValor.get(vizinho.trim())] = true;
             }
         }
+
+        return ret;
     }
 
     private GrafoMatriz(String[] vertices) {
@@ -64,8 +66,8 @@ public class GrafoMatriz implements IGrafo {
         }
     }
 
-    private GrafoMatriz(Componente[] componentes) {
-        this.qtdVertices = componentes.length;
+    private GrafoMatriz(List<Componente> componentes) {
+        this.qtdVertices = componentes.size();
         this.valores = new String[qtdVertices];
         this.arestas = new boolean[qtdVertices][qtdVertices];
         this.pais = new int[qtdVertices];
@@ -75,13 +77,13 @@ public class GrafoMatriz implements IGrafo {
         //Fazendo a leitura dos vertices
         for(int i = 0; i < qtdVertices; i++) {
             this.pais[i] = -1;
-            this.valores[i] = componentes[i].toString();
-            conversorDeValor.put(componentes[i], i);
+            this.valores[i] = componentes.get(i).toString();
+            conversorDeValor.put(componentes.get(i), i);
         }
 
         //Fazendo a leitura dos vizinhos
         for(int atual = 0; atual < qtdVertices; atual++)
-            for(Componente outro : componentes[atual].getLigacoes()) {
+            for(Componente outro : componentes.get(atual).getLigacoes()) {
                 final int outroIndex = conversorDeValor.get(outro);
                 this.arestas[atual][outroIndex] = true;
             }
@@ -107,7 +109,7 @@ public class GrafoMatriz implements IGrafo {
             }
         }
 
-        return new GrafoMatriz(componentes.toArray(new Componente[componentes.size()]));
+        return new GrafoMatriz(componentes);
     }
 
     private List<Integer> buscaEmProfundidade() {

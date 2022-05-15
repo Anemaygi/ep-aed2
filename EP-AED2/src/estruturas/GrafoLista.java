@@ -26,7 +26,7 @@ public class GrafoLista implements IGrafo{
                 String[] vizinhos = separado[1].split(";");
                 No cadaVertice = findVertice(separado[0],vertices);
                 for(String vizinhoVez : vizinhos){
-                    vizinhoVez = vizinhoVez.replace(" ", "");
+                    vizinhoVez = vizinhoVez.strip();
                     cadaVertice.addVizinho(findVertice(vizinhoVez, vertices));
                 }          
             }
@@ -34,8 +34,8 @@ public class GrafoLista implements IGrafo{
         this.vertices = vertices;
     }
 
-    private GrafoLista(List<No> componentes, char x){
-        this.vertices = componentes;
+    private GrafoLista(List<No> vertices, char x){
+        this.vertices = vertices;
     }
 
     private GrafoLista(List<Componente> componentes, int x){
