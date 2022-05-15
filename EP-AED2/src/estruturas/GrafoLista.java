@@ -16,9 +16,8 @@ public class GrafoLista implements IGrafo{
         // Adicionando os vértices
         List<No> vertices = new ArrayList<No>();
         for(String linha : entrada){
-            String[] separado = linha.split(":");
-            No aux = new No(separado[0]);
-            vertices.add(aux);                       
+            String valor = linha.split(":")[0];
+            vertices.add(new No(valor));                       
         }
         // Adicionando as arestas
         for(String linha : entrada){
