@@ -1,8 +1,5 @@
 package estruturas;
 
-import estruturas.No;
-import estruturas.Floresta;
-import estruturas.Componente;
 import estruturas.No.Cor;
 import interfaces.IGrafo;
 import java.util.List;
@@ -104,7 +101,7 @@ public class GrafoLista implements IGrafo{
         List<No> ordem = this.vertices;        
         ordem = this.DFS(ordem); 
         limpaVertices(); 
-        List<No> ordemtr = transposto.DFS(transposto.mudaVizinhos(ordem));
+        transposto.DFS(transposto.mudaVizinhos(ordem));
         Floresta floresta = new Floresta(transposto.vertices);
         List<Componente> componentes = floresta.geraComponentes();
         for(No vertice : vertices){

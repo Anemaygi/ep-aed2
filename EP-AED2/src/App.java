@@ -11,19 +11,16 @@ public class App {
         String estrutura = entrada.get(entrada.size()-1);
         entrada.remove(entrada.size()-1);
 
-        if(estrutura.equals("1")){
-            IGrafo g = new GrafoLista(entrada);
-            IGrafo resul = g.kosaraju();
-            System.out.println(resul.getQtdVertices() == 1 ? "Sim":"Não");
-            System.out.println(resul.getQtdVertices());
-            resul.imprimeGrafo();
-        }
-        else if(estrutura.equals("2")){
-            IGrafo g = new GrafoMatriz(entrada);
-            IGrafo resul = g.kosaraju();
-            resul.imprimeGrafo();
-        }
+        IGrafo g = null;
+        if(estrutura.equals("1"))
+            g = new GrafoLista(entrada);
+        else if(estrutura.equals("2"))
+            g = new GrafoMatriz(entrada);
   
+        IGrafo resul = g.kosaraju();
+        System.out.println(resul.getQtdVertices() == 1 ? "Sim":"Não");
+        System.out.println(resul.getQtdVertices());
+        resul.imprimeGrafo();
     }
 
     public static List<String> caso1() {
