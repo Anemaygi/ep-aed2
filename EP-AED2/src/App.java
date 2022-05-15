@@ -7,15 +7,17 @@ import funcionalidades.Entrada;
 
 public class App {
     public static void main(String[] args) throws Exception {
-        List<String> entrada = Entrada.pegarEntrada(args);
-        String estrutura = entrada.get(entrada.size()-1);
-        entrada.remove(entrada.size()-1);
+        Entrada entrada = Entrada.pegarEntrada(args[0]);
+        
+        //List<String> entrada = Entrada.pegarEntrada(args[0]);
+        //String estrutura = entrada.get(entrada.size()-1);
+        //entrada.remove(entrada.size()-1);
 
         IGrafo g = null;
-        if(estrutura.equals("1"))
-            g = new GrafoLista(entrada);
-        else if(estrutura.equals("2"))
-            g = new GrafoMatriz(entrada);
+        if(entrada.getEstrutura().equals("1"))
+            g = new GrafoLista(entrada.getEntrada());
+        else if(entrada.getEstrutura().equals("2"))
+            g = new GrafoMatriz(entrada.getEntrada());
   
         IGrafo resul = g.kosaraju();
         System.out.println(resul.getQtdVertices() == 1 ? "Sim":"Não");
