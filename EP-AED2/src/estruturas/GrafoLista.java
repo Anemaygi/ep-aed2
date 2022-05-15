@@ -183,7 +183,7 @@ public class GrafoLista implements IGrafo{
             No novoNoTransposto = new No(atual.getValor());
 
             mapaVersTrans.put(atual.getValor(), novoNoTransposto);
-            novosVertices.add(novoNoTransposto);
+            novosVertices.add(novoNoTransposto); //Ja guardando os enderecos para gerar o GrafoLista
         }
 
         //Adicionando os vizinhos
