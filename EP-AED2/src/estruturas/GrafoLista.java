@@ -121,7 +121,7 @@ public class GrafoLista implements IGrafo{
     }
 
     public void imprimeGrafo(){
-        /* working */        
+                
         List<No> componentesDFS = this.DFS(this.getVertices());
         for (No componente : componentesDFS){
             System.out.printf(componente+" ");
@@ -138,7 +138,7 @@ public class GrafoLista implements IGrafo{
     }
 
     public int getQtdVertices(){
-        /* working */
+        
         return vertices.size();
     }
 
@@ -154,10 +154,8 @@ public class GrafoLista implements IGrafo{
     }
 
     public IGrafo getArestasTranspostas(){
-        /* working */
         // Hashmap (exemplo no construtor)
-        ArrayList<No> auxiliar = new ArrayList<No>();
-        
+        ArrayList<No> auxiliar = new ArrayList<No>();    
         for(No item : vertices){
             No aux = new No(item.getValor());
             auxiliar.add(aux);
@@ -167,8 +165,7 @@ public class GrafoLista implements IGrafo{
                 for(No vizinho : itemcompare.getVizinhos()){ 
                     if(vizinho == item){
                        No auxi = findVertice(item.getValor(),auxiliar);
-                       auxi.addVizinho(findVertice(itemcompare.getValor(),auxiliar));
-                       
+                       auxi.addVizinho(findVertice(itemcompare.getValor(),auxiliar)); 
                     }
                 }
                 
@@ -176,7 +173,6 @@ public class GrafoLista implements IGrafo{
             
         }
         GrafoLista transpostas = new GrafoLista(auxiliar,'a');
-        
         return transpostas;
     }
 
