@@ -8,4 +8,6 @@ public interface IGrafo {
     int getQtdVertices();
 
     IGrafo getArestasTranspostas();
+
+    String getVizinhosEmProfundidade(String vertice);
 }

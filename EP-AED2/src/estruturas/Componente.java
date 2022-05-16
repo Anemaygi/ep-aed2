@@ -61,9 +61,9 @@ public class Componente {
         String ret = "";
 
         for(String vertice : vertices) {
-            ret += vertice;
+            ret += vertice + "-";
         }
 
-        return ret;
+        return ret.substring(0, ret.length() - 1);
     }
 }

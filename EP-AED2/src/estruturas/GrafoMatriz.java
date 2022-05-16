@@ -173,6 +173,44 @@ public class GrafoMatriz implements IGrafo {
         return transposta;
     }
 
+    // === METODOS DA APLICACAO === //
+    public String getVizinhosEmProfundidade(String valorVertice) {
+        final int idVertice = achaIdDoVertice(valorVertice);
+
+        if(idVertice == -1)
+            return "Vertice nao presente";
+
+        //Inicializando as cores
+        Cor[] cores = new Cor[qtdVertices];
+        for(int i = 0; i < qtdVertices; i++)
+            cores[i] = Cor.BRANCO;
+
+        return getVizinhosEmProfundidade(idVertice, cores);
+    }
+
+    private int achaIdDoVertice(String valorVertice) {
+        for(int i = 0; i < qtdVertices; i++) {
+            String valor = this.valores[i];
+
+            //Se for um componente, quebramos os valores os vertices e vemos se o procurado esta dentro
+            if(List.of(valor.split("-")).contains(valorVertice))
+                return i;
+        }
+
+        return -1;
+    }
+
+    private String getVizinhosEmProfundidade(int atual, Cor[] cores) {
+        String ret = valores[atual] + " ";
+        cores[atual] = Cor.PRETO;
+
+        for(int viz = 0; viz < qtdVertices; viz++)
+            if(arestas[atual][viz] && cores[viz] == Cor.BRANCO)
+                ret += getVizinhosEmProfundidade(viz, cores) + " ";
+
+        return ret;
+    }
+
     // === OUTROS METODOS === //
     public int getQtdVertices() {
         return this.qtdVertices;

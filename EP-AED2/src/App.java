@@ -7,14 +7,16 @@ import funcionalidades.Entrada;
 
 public class App {
     public static void main(String[] args) throws Exception {
-        Entrada entrada = Entrada.pegarEntrada(args[0]);
+        // Entrada entrada = Entrada.pegarEntrada(args[0]);
  
-        IGrafo g = null;
-        if(entrada.getEstrutura().equals("1"))
-            g = GrafoLista.leGrafoDeEntrada(entrada.getEntrada());
-        else if(entrada.getEstrutura().equals("2"))
-            g = GrafoMatriz.leGrafoDeEntrada(entrada.getEntrada());
+        // IGrafo g = null;
+        // if(entrada.getEstrutura().equals("1"))
+        //     g = GrafoLista.leGrafoDeEntrada(entrada.getEntrada());
+        // else if(entrada.getEstrutura().equals("2"))
+        //     g = GrafoMatriz.leGrafoDeEntrada(entrada.getEntrada());
   
+        IGrafo g = GrafoMatriz.leGrafoDeEntrada(caso1());
+
         IGrafo resul = g.kosaraju();
         System.out.println(resul.getQtdVertices() == 1 ? "Sim":"Não");
         System.out.println(resul.getQtdVertices());
