@@ -3,9 +3,9 @@ package estruturas;
 import estruturas.No.Cor;
 import interfaces.IGrafo;
 import java.util.List;
-import java.util.Map;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 
 public class GrafoLista implements IGrafo{
@@ -13,43 +13,42 @@ public class GrafoLista implements IGrafo{
     private List<No> vertices;
     
     // Métodos construtores   
-
-    public GrafoLista(List<String> entrada){
+    public static IGrafo leGrafoDeEntrada(List<String> vertices) {
         // Adicionando os vértices
-        List<No> vertices = new ArrayList<No>();
-        for(String linha : entrada){
+        List<No> verticesGrafo = new ArrayList<No>();
+        for(String linha : vertices){
             String valor = linha.split(":")[0];
-            vertices.add(new No(valor));                       
+            verticesGrafo.add(new No(valor));                       
         }
         // Adicionando as arestas
-        for(String linha : entrada){
+        for(String linha : vertices){
             String[] separado = linha.split(":");
             if(separado.length > 1){
                 String[] vizinhos = separado[1].split(";");
-                No cadaVertice = findVertice(separado[0],vertices);
+                No cadaVertice = findVertice(separado[0],verticesGrafo);
                 for(String vizinhoVez : vizinhos){
                     vizinhoVez = vizinhoVez.strip();
-                    cadaVertice.addVizinho(findVertice(vizinhoVez, vertices));
+                    cadaVertice.addVizinho(findVertice(vizinhoVez, verticesGrafo));
                 }          
             }
         }
-        this.vertices = vertices;
+        return new GrafoLista(verticesGrafo);
     }
 
-    private GrafoLista(List<No> vertices, char x){
-        this.vertices = vertices;
+    private GrafoLista(List<No> componentes){
+        this.vertices = componentes;
     }
 
     private GrafoLista(List<Componente> componentes, int x){
         List<No> grafoDeComponentes = new ArrayList<No>();
-        for (Componente componente : componentes)
-            grafoDeComponentes.add(new No(componente.toString()));
-
         for (Componente componente : componentes){
-            No achado = findVertice(componente.toString(),grafoDeComponentes);
-
+            No aux = new No(componente.toString());
+            grafoDeComponentes.add(aux);
+        }
+        for (Componente componente : componentes){
+            No aux1 = findVertice(componente.toString(),grafoDeComponentes);
             for (Componente vizinho:componente.getLigacoes()){
-                achado.addVizinho(findVertice(vizinho.toString(),grafoDeComponentes));
+                aux1.addVizinho(findVertice(vizinho.toString(),grafoDeComponentes));
             }
         }
         this.vertices = grafoDeComponentes;
@@ -89,7 +88,7 @@ public class GrafoLista implements IGrafo{
         List<No> ordem = this.vertices;        
         ordem = this.DFS(ordem); 
         limpaVertices(); 
-        transposto.DFS(transposto.getVertices());
+        transposto.DFS(ordem);
         Floresta floresta = new Floresta(transposto.vertices);
         List<Componente> componentes = floresta.geraComponentes();
         for(No vertice : vertices){
@@ -123,7 +122,6 @@ public class GrafoLista implements IGrafo{
     }
 
     public int getQtdVertices(){
-        
         return vertices.size();
     }
 
@@ -158,7 +156,7 @@ public class GrafoLista implements IGrafo{
                 mapaVersTrans.get(viz.getValor()).addVizinho(vizinhoTransposto);
         }
 
-        return new GrafoLista(novosVertices, 'x');
+        return new GrafoLista(novosVertices);
     }
 
     @Override

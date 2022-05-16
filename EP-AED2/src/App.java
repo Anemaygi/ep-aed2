@@ -11,7 +11,7 @@ public class App {
  
         IGrafo g = null;
         if(entrada.getEstrutura().equals("1"))
-            g = new GrafoLista(entrada.getEntrada());
+            g = GrafoLista.leGrafoDeEntrada(entrada.getEntrada());
         else if(entrada.getEstrutura().equals("2"))
             g = GrafoMatriz.leGrafoDeEntrada(entrada.getEntrada());
   
