@@ -10,14 +10,13 @@ public class App {
     static Scanner sc = new Scanner(System.in);
     public static void main(String[] args) throws Exception {
         //Lendo a entrada
-        // Entrada entrada = Entrada.pegarEntrada(args[0]);
+        Entrada entrada = Entrada.pegarEntrada(args[0]);
  
-        // IGrafo g = null;
-        // if(entrada.getEstrutura().equals("1"))
-        //     g = GrafoLista.leGrafoDeEntrada(entrada.getEntrada());
-        // else if(entrada.getEstrutura().equals("2"))
-        //     g = GrafoMatriz.leGrafoDeEntrada(entrada.getEntrada());
-        IGrafo g = GrafoMatriz.leGrafoDeEntrada(caso1());
+        IGrafo g = null;
+        if(entrada.getEstrutura().equals("1"))
+            g = GrafoLista.leGrafoDeEntrada(entrada.getEntrada());
+        else if(entrada.getEstrutura().equals("2"))
+            g = GrafoMatriz.leGrafoDeEntrada(entrada.getEntrada());
 
         //Criando o grafo de componentes
         IGrafo resul = g.kosaraju();
