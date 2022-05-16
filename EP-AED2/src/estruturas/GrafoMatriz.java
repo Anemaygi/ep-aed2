@@ -178,7 +178,7 @@ public class GrafoMatriz implements IGrafo {
         final int idVertice = achaIdDoVertice(valorVertice);
 
         if(idVertice == -1)
-            return "Vertice nao presente";
+            return null;
 
         //Inicializando as cores
         Cor[] cores = new Cor[qtdVertices];
@@ -220,6 +220,11 @@ public class GrafoMatriz implements IGrafo {
         String todosVertices = "";
         int[] tamanhos = new int[qtdVertices];
         int tamanhoMaximo = -1;
+
+        //Mostrando a ordenacao topologica
+        for(int indice : buscaEmProfundidade())
+            System.out.print(valores[indice] + " ");
+        System.out.println();
 
         //Pegando os tamanhos para ajustar a tabela
         for(int verticeId = 0; verticeId < qtdVertices; verticeId++) {
