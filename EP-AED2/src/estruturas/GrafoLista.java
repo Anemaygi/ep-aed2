@@ -132,10 +132,9 @@ public class GrafoLista implements IGrafo{
 
     public static No findVerticeComponent(String valor, List<No> lista){
         for(No item : lista){
-            if(List.of(item.getValor().split("-")).contains(valor)) return item;}
+            if(List.of(item.getValor().split(Componente.separador)).contains(valor)) return item;}
         return null;
     }
-    
     
     private String getVizinhosEmProfundidade(No atual) {
         String saida = atual.getValor() + " ";

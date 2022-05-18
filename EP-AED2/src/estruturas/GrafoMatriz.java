@@ -193,7 +193,7 @@ public class GrafoMatriz implements IGrafo {
             String valor = this.valores[i];
 
             //Se for um componente, quebramos os valores os vertices e vemos se o procurado esta dentro
-            if(List.of(valor.split("-")).contains(valorVertice))
+            if(List.of(valor.split(Componente.separador)).contains(valorVertice))
                 return i;
         }
 

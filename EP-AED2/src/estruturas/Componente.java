@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Componente {
+    public static String separador = "-";
+
     private List<String> vertices;
     private List<Componente> ligacoes;
 
@@ -61,7 +63,7 @@ public class Componente {
         String ret = "";
 
         for(String vertice : vertices) {
-            ret += vertice + "-";
+            ret += vertice + Componente.separador;
         }
 
         return ret.substring(0, ret.length() - 1);
