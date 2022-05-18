@@ -131,7 +131,10 @@ public class GrafoLista implements IGrafo{
    public String getVizinhosEmProfundidade(String valorVertice) {
         final No idVertice = findVerticeComponent(valorVertice, this.vertices);
         if(idVertice == null) return null;
-        this.limpaVertices();
+
+        for (No no : vertices)
+            no.setCor(Cor.BRANCO);
+
         return getVizinhosEmProfundidade(idVertice);
     }
 
