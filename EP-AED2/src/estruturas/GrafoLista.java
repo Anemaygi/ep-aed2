@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 
 
@@ -60,10 +61,10 @@ public class GrafoLista implements IGrafo{
 
     public IGrafo kosaraju(){
         GrafoLista transposto =(GrafoLista) this.getArestasTranspostas();
-        List<No> ordem = this.vertices;        
+        List<String> ordem = this.getVerticesComoValores();        
         ordem = this.DFS(ordem); 
-        limpaVertices(); 
-        transposto.DFS(transposto.mudaVizinhos(ordem));
+
+        transposto.DFS(ordem);
         Floresta floresta = new Floresta(transposto.vertices);
         List<Componente> componentes = floresta.geraComponentes();
         for(No vertice : vertices){
@@ -80,8 +81,8 @@ public class GrafoLista implements IGrafo{
     }
 
     public void imprimeGrafo(){
-        List<No> componentesDFS = this.DFS(this.getVertices());
-        for (No componente : componentesDFS){
+        List<String> componentesDFS = this.DFS(this.getVerticesComoValores());
+        for (String componente : componentesDFS){
             System.out.printf(componente+" ");
         }
         System.out.printf("\n");
@@ -92,6 +93,10 @@ public class GrafoLista implements IGrafo{
             }
             System.out.printf("\n");
         }
+    }
+
+    private List<String> getVerticesComoValores() {
+        return this.vertices.stream().map(No::getValor).collect(Collectors.toList());
     }
 
     public int getQtdVertices(){
@@ -137,11 +142,11 @@ public class GrafoLista implements IGrafo{
     }
     
     private String getVizinhosEmProfundidade(No atual) {
-        String saida = atual.getValor() + " ";
+        String saida = atual.getValor();
         atual.setCor(Cor.PRETO);
         for(No vizinho : atual.getVizinhos()){
             if(vizinho.getCor() == Cor.BRANCO){
-                saida += getVizinhosEmProfundidade(vizinho) + " ";
+                saida += " " + getVizinhosEmProfundidade(vizinho);
             }
         }
         return saida;
@@ -149,9 +154,11 @@ public class GrafoLista implements IGrafo{
 
     // Outros métodos
 
-    public ArrayList<No> DFS(List<No> ordemDFS){
-        ArrayList<No> topologica = new ArrayList<No>();
-        for (No vert : ordemDFS){           
+    public List<String> DFS(List<String> ordemDFS){
+        List<String> topologica = new ArrayList<String>();
+        for (String valorVert : ordemDFS){  
+            No vert = GrafoLista.findVertice(valorVert, vertices);
+
             if(vert.getCor() == Cor.BRANCO){
                 DFSVisit(vert, topologica);
             }
@@ -159,7 +166,7 @@ public class GrafoLista implements IGrafo{
         return topologica;
     }
 
-    public void DFSVisit(No vert, List<No> topologica){
+    public void DFSVisit(No vert, List<String> topologica){
         vert.setCor(Cor.CINZA);
         for (No vizinho : vert.getVizinhos()){
             if(vizinho.getCor() == Cor.BRANCO){
@@ -168,26 +175,7 @@ public class GrafoLista implements IGrafo{
             }
         }
         vert.setCor(Cor.PRETO);
-        topologica.add(0,vert);
-    }
-
-    private void limpaVertices(){
-        for (No no : vertices){
-            no.setCor(Cor.BRANCO);
-        }
-    }
-
-    private List<No> mudaVizinhos(List<No> trocaVertice){
-        List<No> novo = new ArrayList<No>();
-        for(No item : trocaVertice){
-            for(No cada : this.vertices){
-                if(cada.getValor().equals(item.getValor())){
-                    novo.add(cada);
-                    break;
-                }
-            }
-        }
-        return novo;
+        topologica.add(0,vert.getValor());
     }
 
     public List<No> getVertices(){
@@ -209,5 +197,4 @@ public class GrafoLista implements IGrafo{
         }
         return saida;
     }
-
 }
