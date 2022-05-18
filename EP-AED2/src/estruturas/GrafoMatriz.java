@@ -201,12 +201,12 @@ public class GrafoMatriz implements IGrafo {
     }
 
     private String getVizinhosEmProfundidade(int atual, Cor[] cores) {
-        String ret = valores[atual] + " ";
+        String ret = valores[atual];
         cores[atual] = Cor.PRETO;
 
         for(int viz = 0; viz < qtdVertices; viz++)
             if(arestas[atual][viz] && cores[viz] == Cor.BRANCO)
-                ret += getVizinhosEmProfundidade(viz, cores) + " ";
+                ret += " " + getVizinhosEmProfundidade(viz, cores);
 
         return ret;
     }
