@@ -16,7 +16,7 @@
             "request": "launch",
             "mainClass": "App",
             "projectName": "EP-AED2_cf502664",
-            "args": "src/Caso3.txt"
+            "args": "src/Caso1.txt"
         }
     ]
 }

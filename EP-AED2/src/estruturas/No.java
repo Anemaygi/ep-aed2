@@ -8,7 +8,6 @@ public class No {
     private String valor;
     private List<No> vizinhos;
     private No pai;
-    private int dist;
     public static enum Cor{
         BRANCO, CINZA, PRETO
     }
@@ -19,7 +18,6 @@ public class No {
         this.valor = valor;
         this.cor = Cor.BRANCO;
         this.pai = null;
-        this.dist = -1;
         this.vizinhos = new ArrayList<No>();
     }
 
@@ -29,14 +27,6 @@ public class No {
 
     public void setCor(Cor cor){
         this.cor = cor;
-    }
-
-    public int getDist(){
-        return this.dist;
-    }
-
-    public void setDist(int dist){
-        this.dist = dist;
     }
 
     public String getValor(){
@@ -63,15 +53,4 @@ public class No {
     public String toString(){
         return this.valor;
     }
-
-    /*
-    public static void main(String args[]) {
-      No no1 = new No("Alguma coisa");
-      No no2 = new No("Giane");
-      No no3 = new No("Teste");
-      no1.addVizinho(no2);
-      no1.addVizinho(no3);
-      System.out.println(no1.getVizinhos());
-    }
-    */
 }
