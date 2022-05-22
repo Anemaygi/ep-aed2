@@ -41,7 +41,7 @@ public class GrafoLista implements IGrafo{
         this.vertices = componentes;
     }
 
-    private GrafoLista(List<Componente> componentes, int x){
+    private GrafoLista(ArrayList<Componente> componentes){
         List<No> grafoDeComponentes = new ArrayList<No>();
         for (Componente componente : componentes){
             No aux = new No(componente.toString());
@@ -62,9 +62,10 @@ public class GrafoLista implements IGrafo{
     public IGrafo kosaraju(){
         GrafoLista transposto =(GrafoLista) this.getArestasTranspostas();
         List<String> ordem = this.getVerticesComoValores();        
+        
         ordem = this.DFS(ordem); 
-
         transposto.DFS(ordem);
+
         Floresta floresta = new Floresta(transposto.vertices);
         List<Componente> componentes = floresta.geraComponentes();
         for(No vertice : vertices){
@@ -76,7 +77,7 @@ public class GrafoLista implements IGrafo{
                 compatual.addLigacao(Floresta.achaComponente(vizinho.getValor(),componentes));
             }
         }
-        GrafoLista grafoDeComponentes = new GrafoLista(componentes,0);
+        GrafoLista grafoDeComponentes = new GrafoLista((ArrayList<Componente>) componentes);
         return grafoDeComponentes;
     }
 
