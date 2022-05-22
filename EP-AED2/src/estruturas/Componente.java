@@ -1,6 +1,7 @@
 package estruturas;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 public class Componente {
@@ -37,6 +38,7 @@ public class Componente {
     public String toString() {
         String ret = "";
 
+        vertices.sort(Comparator.naturalOrder());
         for(String vertice : vertices) {
             ret += vertice + Componente.separador;
         }
