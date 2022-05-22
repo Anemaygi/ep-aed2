@@ -37,8 +37,8 @@ public class GrafoLista implements IGrafo{
         return new GrafoLista(verticesGrafo);
     }
 
-    private GrafoLista(List<No> componentes){
-        this.vertices = componentes;
+    private GrafoLista(List<No> vertices){
+        this.vertices = vertices;
     }
 
     private GrafoLista(ArrayList<Componente> componentes){
